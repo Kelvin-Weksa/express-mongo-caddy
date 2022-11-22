@@ -1,17 +1,6 @@
 version: "3.8"
 
 services:
-  mongodb:
-    image: mongo
-    restart: unless-stopped
-    env_file: ./.env
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
-      - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
-    ports:
-      - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
-    volumes:
-      - db:/data/db
   caddy:
       image: caddy
       container_name: caddy-service
@@ -23,10 +12,11 @@ services:
           - ./caddy_data:/data
           - ./caddy_config:/config
           - ./Caddyfile:/etc/caddy/Caddyfile
+      depends_on:
+        - app
   app:
     depends_on:
       - mongodb
-      - caddy
     build: ./bezkoder_app
     restart: unless-stopped
     env_file: ./.env
@@ -40,8 +30,19 @@ services:
       - DB_PORT=$MONGODB_DOCKER_PORT
     stdin_open: true
     tty: true
+  mongodb:
+    image: mongo
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+    ports:
+      - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
+    volumes:
+      - db:/data/db
 
 volumes:
   db:
   caddy_data:
-  caddy_config: 
+  caddy_config:

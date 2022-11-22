@@ -134,8 +134,8 @@ app.get("/all", function (req, res) {
       res.json({ ok: false });
       return;
     } else {
-      console.log(res);
-      console.log("Result : ", docs);
+      // console.log(res);
+      // console.log("Result : ", docs);
       res.json({ ok: true, found: docs });
       return;
     }
