@@ -32,7 +32,7 @@ function Navbar() {
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-          <Link class="navbar-brand" to="/app">
+          <Link class="navbar-brand" to="/">
             <img src="/logo512.png" alt="" width="30" height="24" />
           </Link>
         </div>
