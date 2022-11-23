@@ -9,8 +9,6 @@ services:
           - 80:80
           - 443:443
       volumes:            
-          - ./caddy_data:/data
-          - ./caddy_config:/config
           - ./Caddyfile:/etc/caddy/Caddyfile
       depends_on:
         - app
@@ -40,10 +38,3 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
     ports:
       - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
-    volumes:
-      - db:/data/db
-
-volumes:
-  db:
-  caddy_data:
-  caddy_config:
