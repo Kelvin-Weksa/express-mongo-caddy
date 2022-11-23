@@ -2,17 +2,19 @@ version: "3.8"
 
 services:
   caddy:
-      image: caddy
-      container_name: caddy-service
-      restart: unless-stopped
-      ports:
-          - 80:80
-          - 443:443
-      volumes:            
-          - ./caddy_data:/data
-          - ./caddy_config:/config
-          - ./Caddyfile:/etc/caddy/Caddyfile
-      depends_on:
+    image: lucaslorentz/caddy-docker-proxy:ci-alpine
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - CADDY_INGRESS_NETWORKS=caddy
+    networks:
+      - caddy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - caddy_data:/data
+    restart: unless-stopped
+    depends_on:
         - app
   app:
     depends_on:
@@ -31,6 +33,12 @@ services:
       - DB_PORT=$MONGODB_DOCKER_PORT
     stdin_open: true
     tty: true
+    networks:
+      - caddy
+    labels:
+      caddy: 127.0.0.1
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+
   mongodb:
     image: mongo
     restart: unless-stopped
@@ -44,6 +52,9 @@ services:
       - db:/data/db
 
 volumes:
-  db:
-  caddy_data:
-  caddy_config:
+  db: {}
+  caddy_data: {}
+
+networks:
+  caddy:
+    external: true
