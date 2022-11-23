@@ -5,11 +5,19 @@ var User = require("./UserModel");
 const session = require("express-session");
 var bodyParser = require("body-parser");
 const dbConfig = require("./config/db.config.js");
+var https = require('https');
+const fs = require('fs');
+
+const options = {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')
+};
+
 
 console.log( dbConfig.url)
 
-const uri = dbConfig.url
-  // "mongodb+srv://kelvin:AMIfFlO8Xb0jLK74@cluster0.qhv14bw.mongodb.net/?retryWrites=true&w=majority";
+const uri =  dbConfig.url
+   //"mongodb+srv://kelvin:AMIfFlO8Xb0jLK74@cluster0.qhv14bw.mongodb.net/?retryWrites=true&w=majority";
 const connectionParams = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -172,7 +180,15 @@ app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
+
 const port = process.env.NODE_DOCKER_PORT || 8080;
+// Create an HTTP service.
 app.listen(port, () => {
   console.log(`Example |app| listening on port ${port}`);
 });
+
+// Create an HTTPS service identical to the HTTP service.
+const tsl_port = process.env.TSL_NODE_DOCKER_PORT || 48080;
+https.createServer(options, app).listen(tsl_port);
+
+
