@@ -1,3 +1,4 @@
 :80 {
-	reverse_proxy app:80800
+        reverse_proxy app:8080
 }
+
