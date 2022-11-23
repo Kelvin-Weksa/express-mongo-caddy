@@ -1,8 +1,7 @@
 :80 {
-        reverse_proxy app:8080
+	reverse_proxy app:8080
 }
 
 :443 {
-        reverse_proxy app:48080
+	reverse_proxy app:48080
 }
-
